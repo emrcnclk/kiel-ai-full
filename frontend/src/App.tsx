@@ -9,9 +9,11 @@ import AdminDashboard from './pages/Dashboard/AdminDashboard';
 import BlogList from './pages/Blog/BlogList';
 import BlogDetail from './pages/Blog/BlogDetail';
 import BlogCreate from './pages/Blog/BlogCreate';
+import BlogEdit from './pages/Blog/BlogEdit';
 import ActivityList from './pages/Activity/ActivityList';
 import ActivityDetail from './pages/Activity/ActivityDetail';
 import ActivityCreate from './pages/Activity/ActivityCreate';
+import ActivityEdit from './pages/Activity/ActivityEdit';
 import Schedule from './pages/Schedule/Schedule';
 import Appointments from './pages/Appointment/Appointments';
 import Chat from './pages/Chat/Chat';
@@ -42,10 +44,12 @@ function App() {
         <Route path="/blogs" element={<BlogList />} />
         <Route path="/blogs/:id" element={<BlogDetail />} />
         <Route path="/blogs/create" element={<BlogCreate />} />
+        <Route path="/blogs/:id/edit" element={<BlogEdit />} />
         
         <Route path="/activities" element={<ActivityList />} />
         <Route path="/activities/:id" element={<ActivityDetail />} />
         <Route path="/activities/create" element={<ActivityCreate />} />
+        <Route path="/activities/:id/edit" element={<ActivityEdit />} />
         
         <Route path="/schedule" element={<Schedule />} />
         <Route path="/appointments" element={<Appointments />} />

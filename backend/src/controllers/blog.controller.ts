@@ -59,7 +59,7 @@ export const createBlog = async (req: AuthRequest, res: Response, next: NextFunc
 
 export const getBlogs = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { published, author, category, tag, page, limit } = req.query;
+    const { published, author, category, tag, page, limit, search } = req.query;
     const query: any = {};
 
     if (published === 'true') {
@@ -85,6 +85,17 @@ export const getBlogs = async (req: AuthRequest, res: Response, next: NextFuncti
 
     if (tag) {
       query.tags = tag;
+    }
+
+    // Search functionality
+    if (search) {
+      query.$or = [
+        { title: { $regex: search as string, $options: 'i' } },
+        { content: { $regex: search as string, $options: 'i' } },
+        { excerpt: { $regex: search as string, $options: 'i' } },
+        { categories: { $in: [new RegExp(search as string, 'i')] } },
+        { tags: { $in: [new RegExp(search as string, 'i')] } },
+      ];
     }
 
     // Pagination parameters

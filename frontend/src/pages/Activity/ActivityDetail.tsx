@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axiosInstance from '../../utils/axios';
 import { Activity } from '../../types';
@@ -61,11 +61,18 @@ const ActivityDetail = () => {
     return <div>Aktivite bulunamadı.</div>;
   }
 
+  const canEdit = user?.id === (typeof activity.createdBy === 'object' ? activity.createdBy.id : activity.createdBy) || user?.role === 'admin';
+
   return (
     <div className="activity-detail">
-      <button onClick={() => navigate('/activities')} className="btn-secondary">
-        ← Geri
-      </button>
+      <div className="activity-actions">
+        <button onClick={() => navigate('/activities')} className="btn-secondary">
+          ← Geri
+        </button>
+        {canEdit && (
+          <Link to={`/activities/${id}/edit`} className="btn-primary">Düzenle</Link>
+        )}
+      </div>
       <article className="activity-article">
         <h1>{activity.title}</h1>
         {activity.imageUrl && (

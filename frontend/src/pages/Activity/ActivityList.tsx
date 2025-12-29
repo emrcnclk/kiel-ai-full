@@ -1,40 +1,56 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axiosInstance from '../../utils/axios';
 import { Activity } from '../../types';
 import { RootState } from '../../store/store';
+import Pagination from '../../components/Pagination/Pagination';
 import './Activity.css';
 
 const ActivityList = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
-  const [filteredActivities, setFilteredActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalCount: 0,
+    hasNextPage: false,
+    hasPrevPage: false,
+  });
   const [filters, setFilters] = useState({
     category: '',
     difficulty: '',
     age: '',
+    search: '',
   });
   const { user } = useSelector((state: RootState) => state.auth);
 
-  useEffect(() => {
-    fetchActivities();
-  }, []);
+  const currentPage = parseInt(searchParams.get('page') || '1');
+  const searchTerm = searchParams.get('search') || '';
 
   useEffect(() => {
-    applyFilters();
-  }, [activities, filters]);
+    fetchActivities();
+  }, [currentPage, searchParams]);
 
   const fetchActivities = async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
+      params.append('page', currentPage.toString());
+      params.append('limit', '12');
+      
       if (filters.category) params.append('category', filters.category);
       if (filters.difficulty) params.append('difficulty', filters.difficulty);
       if (filters.age) params.append('age', filters.age);
+      if (searchTerm) params.append('search', searchTerm);
       
       const response = await axiosInstance.get(`/activities?${params.toString()}`);
       setActivities(response.data.data || []);
+      
+      if (response.data.pagination) {
+        setPagination(response.data.pagination);
+      }
     } catch (error) {
       console.error('Failed to fetch activities:', error);
     } finally {
@@ -42,41 +58,44 @@ const ActivityList = () => {
     }
   };
 
-  const applyFilters = () => {
-    let filtered = [...activities];
-    
-    if (filters.category) {
-      filtered = filtered.filter(a => a.category === filters.category);
-    }
-    
-    if (filters.difficulty) {
-      filtered = filtered.filter(a => a.difficulty === filters.difficulty);
-    }
-    
-    if (filters.age) {
-      const ageNum = parseInt(filters.age);
-      filtered = filtered.filter(a => 
-        ageNum >= a.ageRange.min && ageNum <= a.ageRange.max
-      );
-    }
-    
-    setFilteredActivities(filtered);
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', page.toString());
+    setSearchParams(params);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    if (key === 'category' && value) params.set('category', value);
+    if (key === 'difficulty' && value) params.set('difficulty', value);
+    if (key === 'age' && value) params.set('age', value);
+    if (searchTerm) params.set('search', searchTerm);
+    setSearchParams(params);
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    if (filters.search.trim()) {
+      params.set('search', filters.search.trim());
+    }
+    if (filters.category) params.set('category', filters.category);
+    if (filters.difficulty) params.set('difficulty', filters.difficulty);
+    if (filters.age) params.set('age', filters.age);
+    setSearchParams(params);
   };
 
   const clearFilters = () => {
-    setFilters({ category: '', difficulty: '', age: '' });
-    fetchActivities();
+    setFilters({ category: '', difficulty: '', age: '', search: '' });
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    setSearchParams(params);
   };
 
-  if (loading) {
-    return <div>Yükleniyor...</div>;
-  }
-
-  const displayActivities = filteredActivities.length > 0 ? filteredActivities : activities;
   const categories = [...new Set(activities.map(a => a.category))];
 
   return (
@@ -89,6 +108,25 @@ const ActivityList = () => {
           </Link>
         )}
       </div>
+      
+      <form onSubmit={handleSearch} className="activity-search">
+        <input
+          type="text"
+          placeholder="Aktivite ara..."
+          value={filters.search}
+          onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+          className="search-input"
+        />
+        <button type="submit" className="btn-primary">Ara</button>
+      </form>
+
+      {searchTerm && (
+        <div className="search-results-info">
+          <p>
+            "{searchTerm}" için <strong>{pagination.totalCount}</strong> sonuç bulundu
+          </p>
+        </div>
+      }
       
       <div className="activity-filters">
         <div className="filter-group">
@@ -135,7 +173,7 @@ const ActivityList = () => {
       </div>
       
       <div className="activity-grid">
-        {displayActivities.map((activity) => (
+        {activities.map((activity) => (
           <Link key={activity._id} to={`/activities/${activity._id}`} className="activity-card">
             {activity.imageUrl && (
               <div className="activity-card-image">
@@ -153,12 +191,22 @@ const ActivityList = () => {
           </Link>
         ))}
       </div>
-      {displayActivities.length === 0 && (
+      {activities.length === 0 && !loading && (
         <p className="no-content">
-          {activities.length === 0 
-            ? 'Henüz aktivite bulunmuyor.' 
-            : 'Filtrelere uygun aktivite bulunamadı.'}
+          {searchTerm || filters.category || filters.difficulty || filters.age
+            ? 'Filtrelere uygun aktivite bulunamadı.' 
+            : 'Henüz aktivite bulunmuyor.'}
         </p>
+      )}
+
+      {pagination.totalPages > 1 && (
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={handlePageChange}
+          hasNextPage={pagination.hasNextPage}
+          hasPrevPage={pagination.hasPrevPage}
+        />
       )}
     </div>
   );

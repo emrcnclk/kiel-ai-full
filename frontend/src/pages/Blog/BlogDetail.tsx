@@ -61,6 +61,7 @@ const BlogDetail = () => {
         <Link to="/blogs" className="btn-secondary">← Geri</Link>
         {canEdit && (
           <>
+            <Link to={`/blogs/${id}/edit`} className="btn-primary">Düzenle</Link>
             <button onClick={handleDelete} className="btn-danger">Sil</button>
           </>
         )}

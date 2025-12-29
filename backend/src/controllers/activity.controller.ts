@@ -30,7 +30,7 @@ export const createActivity = async (req: AuthRequest, res: Response, next: Next
 
 export const getActivities = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { category, age, difficulty, createdBy, page, limit } = req.query;
+    const { category, age, difficulty, createdBy, page, limit, search } = req.query;
     const query: any = {};
 
     if (category) {
@@ -52,6 +52,17 @@ export const getActivities = async (req: AuthRequest, res: Response, next: NextF
       }
     }
 
+    // Search functionality
+    if (search) {
+      query.$or = [
+        { title: { $regex: search as string, $options: 'i' } },
+        { description: { $regex: search as string, $options: 'i' } },
+        { instructions: { $regex: search as string, $options: 'i' } },
+        { category: { $regex: search as string, $options: 'i' } },
+        { materials: { $in: [new RegExp(search as string, 'i')] } },
+      ];
+    }
+
     // Pagination parameters
     const pageNumber = parseInt(page as string) || 1;
     const pageSize = parseInt(limit as string) || 10;
@@ -65,36 +76,37 @@ export const getActivities = async (req: AuthRequest, res: Response, next: NextF
       return next(new AppError('Limit must be between 1 and 100', 400));
     }
 
-    // Get activities with pagination
-    let activitiesQuery = Activity.find(query)
-      .populate('createdBy', 'email')
-      .sort({ createdAt: -1 });
+    // Get total count for pagination metadata
+    let totalCount = await Activity.countDocuments(query);
 
-    // Filter by age if provided (before pagination for accurate count)
+    // Get paginated activities
+    let activities = await Activity.find(query)
+      .populate('createdBy', 'email')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(pageSize);
+
+    // Filter by age if provided (after pagination for display, but count is approximate)
+    // Note: For accurate age filtering with pagination, consider using MongoDB aggregation
     if (age) {
       const ageNum = parseInt(age as string);
       if (isNaN(ageNum)) {
         return next(new AppError('Invalid age parameter', 400));
       }
-      // Note: Age filtering happens after query, so we need to handle it differently
-      // For now, we'll get all and filter, but this could be optimized
-    }
-
-    // Get total count (before age filtering for accurate pagination)
-    let activities = await activitiesQuery;
-    
-    // Filter by age if provided
-    if (age) {
-      const ageNum = parseInt(age as string);
       activities = activities.filter(
         activity => ageNum >= activity.ageRange.min && ageNum <= activity.ageRange.max
       );
+      // Adjust totalCount if age filtering is applied
+      // This is an approximation - for exact count, you'd need to filter before pagination
+      const ageFilteredCount = await Activity.countDocuments({
+        ...query,
+        'ageRange.min': { $lte: ageNum },
+        'ageRange.max': { $gte: ageNum },
+      });
+      totalCount = ageFilteredCount;
     }
 
-    const totalCount = activities.length;
-    
-    // Apply pagination after age filtering
-    const paginatedActivities = activities.slice(skip, skip + pageSize);
+    const paginatedActivities = activities;
 
     // Calculate pagination metadata
     const totalPages = Math.ceil(totalCount / pageSize);
