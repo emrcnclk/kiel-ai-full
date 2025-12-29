@@ -1,0 +1,23 @@
+import { Outlet } from 'react-router-dom';
+import Navbar from './Navbar';
+import Sidebar from './Sidebar';
+import NotificationPanel from '../Notification/NotificationPanel';
+import './Layout.css';
+
+const Layout = () => {
+  return (
+    <div className="layout">
+      <Navbar />
+      <div className="layout-content">
+        <Sidebar />
+        <main className="main-content">
+          <Outlet />
+        </main>
+      </div>
+      <NotificationPanel />
+    </div>
+  );
+};
+
+export default Layout;
+

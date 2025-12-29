@@ -1,0 +1,71 @@
+.appointments-page {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.appointments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.appointment-form {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.appointment-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.appointment-info h3 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.appointment-info p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.status-pending {
+  color: #f39c12;
+  font-weight: 500;
+}
+
+.status-approved {
+  color: #27ae60;
+  font-weight: 500;
+}
+
+.status-rejected {
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+.status-completed {
+  color: #3498db;
+  font-weight: 500;
+}
+
+.appointment-actions {
+  display: flex;
+  gap: 10px;
+}
+
