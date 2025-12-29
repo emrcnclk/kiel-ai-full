@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # KIEL-AI-FULL
 
 KIEL-AI-FULL, uzmanlar ve aileleri birbirine bağlayan psikolojik ve eğitimsel destek platformudur. Platform, içerik yönetimi, aktiviteler, randevu sistemi, gerçek zamanlı sohbet ve AI destekli özellikler sunar.
