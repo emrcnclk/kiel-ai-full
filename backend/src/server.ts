@@ -14,6 +14,8 @@ import chatRoutes from './routes/chat.routes';
 import aiRoutes from './routes/ai.routes';
 import notificationRoutes from './routes/notification.routes';
 import uploadRoutes from './routes/upload.routes';
+import statsRoutes from './routes/stats.routes';
+import badgeRoutes from './routes/badge.routes';
 import { setupSocketIO } from './socket/socket';
 import { errorHandler } from './middleware/errorHandler';
 import path from 'path';
@@ -52,6 +54,8 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/stats', statsRoutes);
+app.use('/api/badges', badgeRoutes);
 
 // Health check with database status
 app.get('/api/health', (req, res) => {

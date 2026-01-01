@@ -20,6 +20,7 @@ export interface ExpertProfile {
   certifications: string[];
   bio: string;
   phone?: string;
+  profileImageUrl?: string;
 }
 
 export interface ClientProfile {
@@ -31,6 +32,7 @@ export interface ClientProfile {
   childInterests: string[];
   notes: string;
   phone?: string;
+  profileImageUrl?: string;
 }
 
 export interface Blog {
@@ -43,6 +45,7 @@ export interface Blog {
   tags: string[];
   isPublished: boolean;
   views: number;
+  imageUrl?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -61,6 +64,7 @@ export interface Activity {
   instructions: string;
   materials?: string[];
   estimatedDuration: number;
+  imageUrl?: string;
   createdAt: string;
   updatedAt: string;
 }

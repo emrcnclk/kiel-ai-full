@@ -34,7 +34,9 @@ const Chat = () => {
       });
 
       setSocket(newSocket);
-      return () => newSocket.close();
+      return () => {
+        newSocket.close();
+      };
     }
   }, [accessToken]);
 

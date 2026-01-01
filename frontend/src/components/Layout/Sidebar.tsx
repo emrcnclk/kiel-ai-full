@@ -27,6 +27,8 @@ const Sidebar = () => {
     { path: '/profile', label: 'Profil', icon: '👤' },
     { path: '/blogs', label: 'Blog Yazıları', icon: '📝' },
     { path: '/activities', label: 'Aktiviteler', icon: '🎮' },
+    { path: '/badges', label: 'Rozetler', icon: '🏆' },
+    { path: '/certificate', label: 'Sertifika', icon: '🎓' },
     { path: '/appointments', label: 'Randevular', icon: '📋' },
     { path: '/chat', label: 'Mesajlar', icon: '💬' },
     { path: '/ai-chat', label: 'AI Asistan', icon: '🤖' },

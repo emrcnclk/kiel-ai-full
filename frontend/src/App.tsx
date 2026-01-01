@@ -19,6 +19,8 @@ import Appointments from './pages/Appointment/Appointments';
 import Chat from './pages/Chat/Chat';
 import AIChat from './pages/AI/AIChat';
 import Profile from './pages/Profile/Profile';
+import Badges from './pages/Badges/Badges';
+import Certificate from './pages/Certificate/Certificate';
 import Layout from './components/Layout/Layout';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 
@@ -58,6 +60,9 @@ function App() {
         <Route path="/chat/:partnerId" element={<Chat />} />
         
         <Route path="/ai-chat" element={<AIChat />} />
+        
+        <Route path="/badges" element={<Badges />} />
+        <Route path="/certificate" element={<Certificate />} />
         </Route>
       </Route>
       

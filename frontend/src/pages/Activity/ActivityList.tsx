@@ -126,7 +126,7 @@ const ActivityList = () => {
             "{searchTerm}" için <strong>{pagination.totalCount}</strong> sonuç bulundu
           </p>
         </div>
-      }
+      )}
       
       <div className="activity-filters">
         <div className="filter-group">

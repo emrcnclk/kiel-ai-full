@@ -239,7 +239,21 @@ export const completeActivity = async (req: AuthRequest, res: Response, next: Ne
       rating: req.body.rating,
     });
 
-    res.status(201).json({ success: true, data: completion });
+    // Check and award badges
+    try {
+      const { checkAndAwardBadges } = await import('../services/badge.service');
+      const awardedBadges = await checkAndAwardBadges(clientId);
+      
+      res.status(201).json({ 
+        success: true, 
+        data: completion,
+        badges: awardedBadges.length > 0 ? awardedBadges : undefined
+      });
+    } catch (badgeError) {
+      // Don't fail the request if badge check fails
+      console.error('Badge check error:', badgeError);
+      res.status(201).json({ success: true, data: completion });
+    }
   } catch (error) {
     next(error);
   }

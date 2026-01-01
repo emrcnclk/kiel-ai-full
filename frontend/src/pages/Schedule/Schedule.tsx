@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import axiosInstance from '../../utils/axios';
-import { Schedule as ScheduleType, TimeSlot } from '../../types';
+import { TimeSlot } from '../../types';
 import './Schedule.css';
 
 const Schedule = () => {
-  const [schedule, setSchedule] = useState<ScheduleType | null>(null);
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -16,7 +15,6 @@ const Schedule = () => {
     try {
       const response = await axiosInstance.get('/schedules/my-schedule');
       if (response.data.data) {
-        setSchedule(response.data.data);
         setTimeSlots(response.data.data.timeSlots || []);
       }
     } catch (error) {

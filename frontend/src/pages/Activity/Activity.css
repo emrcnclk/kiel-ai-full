@@ -165,6 +165,18 @@
   margin-top: 25px;
 }
 
+.activity-steps {
+  margin-top: 20px;
+}
+
+.activity-steps > div {
+  transition: all 0.3s ease;
+}
+
+.activity-steps > div:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .activity-materials ul {
   list-style-type: disc;
   margin-left: 20px;
