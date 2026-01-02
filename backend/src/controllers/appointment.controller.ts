@@ -266,6 +266,57 @@ export const updateAppointmentStatus = async (req: AuthRequest, res: Response, n
   }
 };
 
+export const addExpertNotes = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { expertNotes } = req.body;
+    const userId = req.user?.id;
+    const { role } = req.user || {};
+
+    if (!isValidObjectId(id)) {
+      return next(new AppError('Invalid appointment ID', 400));
+    }
+
+    const appointment = await Appointment.findById(id);
+    if (!appointment) {
+      return next(new AppError('Appointment not found', 404));
+    }
+
+    // Only expert or admin can add notes
+    if (appointment.expert.toString() !== userId && role !== 'admin') {
+      return next(new AppError('Access denied', 403));
+    }
+
+    if (!expertNotes || expertNotes.trim().length === 0) {
+      return next(new AppError('Expert notes are required', 400));
+    }
+
+    appointment.expertNotes = expertNotes.trim();
+    await appointment.save();
+
+    // Notify client (non-blocking)
+    try {
+      await Notification.create({
+        user: appointment.client,
+        type: NotificationType.APPOINTMENT_REQUEST,
+        title: 'Uzman Değerlendirmesi Eklendi',
+        message: 'Randevunuz için uzman değerlendirmesi eklendi.',
+        relatedId: appointment._id,
+      });
+    } catch (notificationError) {
+      console.error('Failed to send notification:', notificationError);
+    }
+
+    res.json({
+      success: true,
+      data: appointment,
+      message: 'Uzman notları başarıyla eklendi',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const cancelAppointment = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id } = req.params;

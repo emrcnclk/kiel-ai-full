@@ -14,7 +14,8 @@ export interface IAppointment extends Document {
   scheduledAt: Date;
   duration: number; // minutes
   status: AppointmentStatus;
-  notes?: string;
+  notes?: string; // Client notes
+  expertNotes?: string; // Expert evaluation notes
   createdAt: Date;
   updatedAt: Date;
 }
@@ -48,6 +49,11 @@ const AppointmentSchema = new Schema<IAppointment>(
     },
     notes: {
       type: String,
+    },
+    expertNotes: {
+      type: String,
+      trim: true,
+      maxlength: 2000,
     },
   },
   {

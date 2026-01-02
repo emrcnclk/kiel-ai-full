@@ -4,6 +4,7 @@ import {
   getAppointments,
   getAppointmentById,
   updateAppointmentStatus,
+  addExpertNotes,
   cancelAppointment,
 } from '../controllers/appointment.controller';
 import { authenticate } from '../middleware/auth.middleware';
@@ -14,6 +15,7 @@ router.post('/', authenticate, createAppointment);
 router.get('/', authenticate, getAppointments);
 router.get('/:id', authenticate, getAppointmentById);
 router.patch('/:id/status', authenticate, updateAppointmentStatus);
+router.patch('/:id/expert-notes', authenticate, addExpertNotes);
 router.patch('/:id/cancel', authenticate, cancelAppointment);
 
 export default router;

@@ -62,6 +62,25 @@ const ClientDashboard = () => {
     }
   };
 
+  const handleDownloadReport = async () => {
+    try {
+      const response = await axiosInstance.get(`/reports/progress?period=${period}`, {
+        responseType: 'blob',
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `ilerleme-raporu-${period}-${new Date().toISOString().split('T')[0]}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Failed to download report:', error);
+      alert('Rapor indirilirken bir hata oluştu.');
+    }
+  };
+
   return (
     <div className="dashboard">
       <h1>Müşteri Dashboard</h1>
@@ -121,6 +140,13 @@ const ClientDashboard = () => {
         <Link to="/certificate" className="quick-link-btn">
           🎓 Sertifikam
         </Link>
+        <button
+          onClick={handleDownloadReport}
+          className="quick-link-btn"
+          style={{ border: 'none', cursor: 'pointer' }}
+        >
+          📄 Rapor İndir
+        </button>
       </div>
 
       {chartStats && (

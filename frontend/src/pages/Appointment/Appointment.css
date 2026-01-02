@@ -94,3 +94,17 @@
   border-left: 3px solid #e74c3c;
 }
 
+.expert-notes {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-left: 4px solid #3498db;
+  border-radius: 5px;
+}
+
+.expert-notes-content {
+  margin-top: 8px;
+  color: #555;
+  line-height: 1.6;
+}
+

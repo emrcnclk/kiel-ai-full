@@ -25,6 +25,7 @@ const Sidebar = () => {
   const clientMenu = [
     { path: '/dashboard', label: 'Dashboard', icon: '📊' },
     { path: '/profile', label: 'Profil', icon: '👤' },
+    { path: '/experts', label: 'Uzmanlar', icon: '👨‍⚕️' },
     { path: '/blogs', label: 'Blog Yazıları', icon: '📝' },
     { path: '/activities', label: 'Aktiviteler', icon: '🎮' },
     { path: '/badges', label: 'Rozetler', icon: '🏆' },
@@ -32,6 +33,7 @@ const Sidebar = () => {
     { path: '/appointments', label: 'Randevular', icon: '📋' },
     { path: '/chat', label: 'Mesajlar', icon: '💬' },
     { path: '/ai-chat', label: 'AI Asistan', icon: '🤖' },
+    { path: '/feedback', label: 'Geri Bildirim', icon: '💭' },
   ];
 
   const adminMenu = [

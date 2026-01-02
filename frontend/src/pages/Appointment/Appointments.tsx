@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 import axiosInstance from '../../utils/axios';
 import { Appointment } from '../../types';
 import { RootState } from '../../store/store';
@@ -21,13 +22,15 @@ interface Expert {
 
 const Appointments = () => {
   const { user } = useSelector((state: RootState) => state.auth);
+  const [searchParams] = useSearchParams();
+  const expertParam = searchParams.get('expert');
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [experts, setExperts] = useState<Expert[]>([]);
   const [loading, setLoading] = useState(true);
   const [expertsLoading, setExpertsLoading] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [formData, setFormData] = useState({
-    expert: '',
+    expert: expertParam || '',
     scheduledAt: '',
     duration: 60,
     notes: '',
@@ -39,6 +42,13 @@ const Appointments = () => {
       fetchExperts();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (expertParam && experts.length > 0) {
+      setFormData(prev => ({ ...prev, expert: expertParam }));
+      setShowCreateForm(true);
+    }
+  }, [expertParam, experts]);
 
   const fetchAppointments = async () => {
     try {
@@ -190,6 +200,12 @@ const Appointments = () => {
               <p><strong>Süre:</strong> {apt.duration} dakika</p>
               <p><strong>Durum:</strong> <span className={`status-${apt.status}`}>{apt.status}</span></p>
               {apt.notes && <p><strong>Notlar:</strong> {apt.notes}</p>}
+              {apt.expertNotes && (
+                <div className="expert-notes">
+                  <p><strong>Uzman Değerlendirmesi:</strong></p>
+                  <p className="expert-notes-content">{apt.expertNotes}</p>
+                </div>
+              )}
             </div>
             {user?.role === 'expert' && apt.status === 'pending' && (
               <div className="appointment-actions">

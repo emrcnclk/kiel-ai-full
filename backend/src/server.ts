@@ -16,6 +16,10 @@ import notificationRoutes from './routes/notification.routes';
 import uploadRoutes from './routes/upload.routes';
 import statsRoutes from './routes/stats.routes';
 import badgeRoutes from './routes/badge.routes';
+import feedbackRoutes from './routes/feedback.routes';
+import commentRoutes from './routes/comment.routes';
+import reportRoutes from './routes/report.routes';
+import healthLogRoutes from './routes/healthLog.routes';
 import { setupSocketIO } from './socket/socket';
 import { errorHandler } from './middleware/errorHandler';
 import path from 'path';
@@ -56,6 +60,10 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/badges', badgeRoutes);
+app.use('/api/feedback', feedbackRoutes);
+app.use('/api/comments', commentRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/health-logs', healthLogRoutes);
 
 // Health check with database status
 app.get('/api/health', (req, res) => {

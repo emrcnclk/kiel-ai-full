@@ -21,6 +21,9 @@ import AIChat from './pages/AI/AIChat';
 import Profile from './pages/Profile/Profile';
 import Badges from './pages/Badges/Badges';
 import Certificate from './pages/Certificate/Certificate';
+import ExpertList from './pages/Expert/ExpertList';
+import ExpertDetail from './pages/Expert/ExpertDetail';
+import Feedback from './pages/Feedback/Feedback';
 import Layout from './components/Layout/Layout';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 
@@ -63,6 +66,11 @@ function App() {
         
         <Route path="/badges" element={<Badges />} />
         <Route path="/certificate" element={<Certificate />} />
+        
+        <Route path="/experts" element={<ExpertList />} />
+        <Route path="/experts/:id" element={<ExpertDetail />} />
+        
+        <Route path="/feedback" element={<Feedback />} />
         </Route>
       </Route>
       

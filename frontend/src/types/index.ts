@@ -77,6 +77,57 @@ export interface Appointment {
   duration: number;
   status: 'pending' | 'approved' | 'rejected' | 'completed' | 'cancelled';
   notes?: string;
+  expertNotes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Feedback {
+  _id: string;
+  user: string;
+  type: 'general' | 'activity' | 'appointment' | 'platform' | 'suggestion';
+  title: string;
+  message: string;
+  rating?: number;
+  relatedId?: string;
+  isAnonymous: boolean;
+  status: 'pending' | 'reviewed' | 'resolved';
+  adminResponse?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Comment {
+  _id: string;
+  user: {
+    _id: string;
+    email: string;
+    role: string;
+  };
+  content: string;
+  relatedType: 'blog' | 'activity';
+  relatedId: string;
+  parentComment?: string;
+  likes: string[];
+  isLiked?: boolean;
+  isEdited: boolean;
+  replies?: Comment[];
+  replyCount?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HealthLog {
+  _id: string;
+  user: string;
+  date: string;
+  mood?: 'very_happy' | 'happy' | 'neutral' | 'sad' | 'very_sad';
+  sleepHours?: number;
+  appetite?: 'good' | 'normal' | 'poor';
+  energyLevel?: number;
+  notes?: string;
+  symptoms?: string[];
+  medications?: string[];
   createdAt: string;
   updatedAt: string;
 }
