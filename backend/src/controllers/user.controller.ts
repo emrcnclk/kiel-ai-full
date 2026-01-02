@@ -77,7 +77,7 @@ export const updateProfile = async (req: AuthRequest, res: Response): Promise<vo
 export const getAllExperts = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const experts = await ExpertProfile.find()
-      .populate('user', 'email role')
+      .populate('user', '_id email role')
       .select('-__v');
     res.json({ success: true, data: experts });
   } catch (error) {

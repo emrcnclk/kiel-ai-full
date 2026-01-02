@@ -69,3 +69,28 @@
   gap: 10px;
 }
 
+.form-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.error-text {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  padding: 10px;
+  background: #ffeaea;
+  border-radius: 5px;
+  border-left: 3px solid #e74c3c;
+}
+
